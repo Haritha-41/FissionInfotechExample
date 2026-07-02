@@ -1,0 +1,29 @@
+# Render Blueprint for the Express API. In Render: New > Blueprint > pick this repo.
+# MONGO_URI, CLIENT_ORIGIN, and ADMIN_PASSWORD are left for you to fill in the
+# dashboard (sync: false); JWT_SECRET is generated automatically.
+services:
+  - type: web
+    name: reservation-api
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: MONGO_URI
+        sync: false
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: ADMIN_NAME
+        value: Admin
+      - key: ADMIN_EMAIL
+        value: admin@restaurant.com
+      - key: ADMIN_PASSWORD
+        sync: false

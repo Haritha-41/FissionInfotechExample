@@ -180,10 +180,39 @@ equality check, free of timezone range-query bugs. Cancelling a reservation
 
 ## Live Deployment
 
-- Frontend: _TODO — add deployed URL (e.g. Vercel/Netlify)_
-- Backend: _TODO — add deployed URL (e.g. Render/Railway)_
+- Frontend (Vercel): _TODO — add deployed URL_
+- Backend (Render): _TODO — add deployed URL_
 - Database: MongoDB Atlas
 
-> Deploy notes: set the same env vars in the host dashboards, point
-> `VITE_API_URL` at the deployed backend, and run `npm run seed` once against
-> the production database.
+Config files are already in the repo: `render.yaml` (backend blueprint) and
+`client/vercel.json` (SPA rewrite so deep links / refresh don't 404).
+
+### Deploy checklist
+
+**1. MongoDB Atlas (prerequisite)**
+
+- Create a free cluster → Database Access: add a user → Network Access: allow
+  `0.0.0.0/0` (or Render's IPs).
+- Copy the connection string: `mongodb+srv://<user>:<pass>@.../restaurant_reservations`.
+
+**2. Backend on Render**
+
+- New → **Blueprint** → select this repo (Render reads `render.yaml`).
+- Fill the prompted vars: `MONGO_URI` (from step 1), `ADMIN_PASSWORD`, and
+  `CLIENT_ORIGIN` (set after step 3, or `*` temporarily). `JWT_SECRET` is
+  auto-generated.
+- After first deploy, open the Render **Shell** and run `npm run seed` once to
+  create tables + the admin user. Health check: `GET /api/health`.
+
+**3. Frontend on Vercel**
+
+- New Project → import this repo → set **Root Directory** to `client`
+  (framework auto-detected as Vite; `vercel.json` handles routing).
+- Add env var `VITE_API_URL = https://<your-render-service>.onrender.com/api`.
+- Deploy.
+
+**4. Wire the two together**
+
+- Set the backend's `CLIENT_ORIGIN` (in Render) to the Vercel URL, so CORS
+  allows the frontend. Redeploy the backend if you changed it.
+- Update the two URLs at the top of this section.
