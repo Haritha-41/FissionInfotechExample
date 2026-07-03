@@ -180,9 +180,12 @@ equality check, free of timezone range-query bugs. Cancelling a reservation
 
 ## Live Deployment
 
-- Frontend (Vercel): _TODO — add deployed URL_
-- Backend (Render): _TODO — add deployed URL_
-- Database: MongoDB Atlas
+- **Frontend (Vercel):** https://fission-infotech-example.vercel.app
+- **Backend (Render):** https://reservation-api-ymlx.onrender.com — health: `/api/health`
+- **Database:** MongoDB Atlas
+
+> Note: the backend runs on Render's free tier and spins down after ~15 min of
+> inactivity, so the first request after idle can take ~50s to wake.
 
 Config files are already in the repo: `render.yaml` (backend blueprint) and
 `client/vercel.json` (SPA rewrite so deep links / refresh don't 404).
